@@ -1,0 +1,401 @@
+/* ==========================================================================
+   1. MODERN SYSTEM CSS VARIABLES & RESET
+   ========================================================================== */
+@import url('googleapis.com');
+
+:root {
+    --bg-dark: #0a0f1d;
+    --bg-card: rgba(20, 27, 45, 0.6);
+    --border-glow: rgba(0, 242, 254, 0.15);
+    
+    /* Neon Youth Accent Palette */
+    --accent-cyan: #00f2fe;
+    --accent-purple: #9b51e0;
+    --accent-emerald: #00f5a0;
+    --text-primary: #f8fafc;
+    --text-muted: #94a3b8;
+    
+    --font-main: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    --transition-smooth: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    scroll-behavior: smooth;
+}
+
+body {
+    background-color: var(--bg-dark);
+    color: var(--text-primary);
+    font-family: var(--font-main);
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+/* Accessibility Skip Link styling */
+a[href="#main-content"] {
+    position: absolute;
+    top: -100px;
+    left: 20px;
+    background: linear-gradient(135deg, var(--accent-cyan), var(--accent-emerald));
+    color: #000;
+    padding: 12px 24px;
+    font-weight: 700;
+    border-radius: 8px;
+    z-index: 9999;
+    transition: var(--transition-smooth);
+}
+a[href="#main-content"]:focus { top: 20px; }
+
+/* ==========================================================================
+   2. IMMERSIVE GLOWING HEADER & NAVIGATION
+   ========================================================================== */
+header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background: rgba(10, 15, 29, 0.75);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border-glow);
+    padding: 15px 5vw;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header > div:first-child {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+header img {
+    filter: drop-shadow(0 0 10px rgba(0, 242, 254, 0.4));
+    transition: var(--transition-smooth);
+}
+header img:hover { transform: rotate(5deg) scale(1.05); }
+
+header h1 {
+    font-size: 1.4rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, #fff, var(--text-muted));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+header p {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--accent-cyan);
+    font-weight: 700;
+}
+
+nav ul {
+    display: flex;
+    list-style: none;
+    gap: 30px;
+}
+
+nav a {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+    position: relative;
+    padding: 5px 0;
+    transition: var(--transition-smooth);
+}
+
+nav a:hover, nav a[aria-current="page"] {
+    color: var(--accent-cyan);
+    text-shadow: 0 0 15px rgba(0, 242, 254, 0.6);
+}
+
+nav a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple));
+    transition: var(--transition-smooth);
+}
+nav a:hover::after, nav a[aria-current="page"]::after { width: 100%; }
+
+nav button { display: none; } /* Managed via JS on mobile later */
+
+/* ==========================================================================
+   3. CYBERPUNK HERO HERO BANNER
+   ========================================================================== */
+#main-content {
+    max-width: 1300px;
+    margin: 0 auto;
+    padding: 40px 5vw;
+}
+
+#introduction {
+    text-align: center;
+    padding: 100px 0 60px 0;
+    background: radial-gradient(circle at center, rgba(155, 81, 224, 0.12) 0%, transparent 65%);
+}
+
+#introduction h2 {
+    font-size: 3.5rem;
+    font-weight: 800;
+    letter-spacing: -1px;
+    line-height: 1.1;
+    margin-bottom: 25px;
+    background: linear-gradient(135deg, #ffffff 30%, var(--accent-cyan) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+#introduction p {
+    font-size: 1.2rem;
+    color: var(--text-muted);
+    max-width: 800px;
+    margin: 0 auto 35px auto;
+}
+
+/* ==========================================================================
+   4. GLASSMORPHISM STRUCTURES & CONTENT GRID
+   ========================================================================== */
+section {
+    margin-bottom: 100px;
+}
+
+section h2 {
+    font-size: 2rem;
+    font-weight: 800;
+    margin-bottom: 40px;
+    position: relative;
+    display: inline-block;
+}
+
+section h2::before {
+    content: '// ';
+    color: var(--accent-cyan);
+    text-shadow: 0 0 10px var(--accent-cyan);
+}
+
+/* Reusable Glass Card Style via Type Selectors */
+section > article, fieldset, form {
+    background: var(--bg-card);
+    border: 1px solid var(--border-glow);
+    border-radius: 20px;
+    padding: 35px;
+    margin-bottom: 30px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    transition: var(--transition-smooth);
+}
+
+section > article:hover {
+    border-color: rgba(0, 242, 254, 0.4);
+    transform: translateY(-5px);
+    box-shadow: 0 30px 60px rgba(0, 242, 254, 0.1);
+}
+
+/* Headmaster Component Alignment */
+#administration article div {
+    display: flex;
+    gap: 40px;
+    align-items: center;
+    margin-top: 20px;
+}
+
+#administration article img {
+    border-radius: 15px;
+    border: 2px solid var(--accent-purple);
+    object-fit: cover;
+    box-shadow: 0 0 30px rgba(155, 81, 224, 0.3);
+}
+
+blockquote p {
+    font-style: italic;
+    font-size: 1.15rem;
+    color: #e2e8f0;
+    position: relative;
+    margin-bottom: 15px;
+}
+
+blockquote cite {
+    color: var(--accent-cyan);
+    font-weight: 700;
+    font-style: normal;
+    font-size: 0.9rem;
+}
+
+/* ==========================================================================
+   5. INTERACTIVE SCI-FI TABLES & DATA MAPS
+   ========================================================================== */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 25px 0;
+    font-size: 0.95rem;
+}
+
+th {
+    background: rgba(0, 242, 254, 0.08);
+    color: var(--accent-cyan);
+    font-weight: 700;
+    text-align: left;
+    padding: 16px;
+    border-bottom: 2px solid var(--accent-cyan);
+}
+
+td {
+    padding: 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    color: #e2e8f0;
+}
+
+tr:hover td {
+    background: rgba(255, 255, 255, 0.02);
+    color: #fff;
+}
+
+/* Organogram Tree Layout via Nested HTML Lists */
+#administration ul ul {
+    margin-left: 25px;
+    border-left: 2px dashed var(--accent-purple);
+    padding-left: 20px;
+    list-style-type: square;
+}
+
+#administration li {
+    margin: 12px 0;
+    color: #cbd5e1;
+}
+
+#administration strong {
+    color: var(--accent-emerald);
+}
+
+/* ==========================================================================
+   6. RESPONSIVE GRID MATRIX (Sports, Academics, Combinations)
+   ========================================================================== */
+#academics div, #student-life, #news-media {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 25px;
+}
+
+#academics ul {
+    list-style: none;
+}
+
+#academics li {
+    background: rgba(255,255,255,0.02);
+    padding: 12px 20px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    border-left: 4px solid var(--accent-emerald);
+}
+
+/* ==========================================================================
+   7. PARENT PORTAL - GAMIFIED SECURITY ENTRY
+   ========================================================================== */
+#portal form {
+    max-width: 600px;
+    margin: 30px auto 0 auto;
+    background: linear-gradient(145deg, rgba(20, 27, 45, 0.9), rgba(10, 15, 29, 0.9));
+}
+
+#portal div {
+    margin-bottom: 25px;
+}
+
+#portal label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+}
+
+#portal input {
+    width: 100%;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 10px;
+    padding: 16px;
+    color: #fff;
+    font-family: var(--font-main);
+    font-size: 1rem;
+    transition: var(--transition-smooth);
+}
+
+#portal input:focus {
+    outline: none;
+    border-color: var(--accent-cyan);
+    box-shadow: 0 0 15px rgba(0, 242, 254, 0.25);
+}
+
+#portal button {
+    width: 100%;
+    background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple));
+    color: #000;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 18px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-family: var(--font-main);
+    box-shadow: 0 0 25px rgba(0, 242, 254, 0.3);
+    transition: var(--transition-smooth);
+}
+
+#portal button:hover {
+    transform: scale(1.02);
+    box-shadow: 0 0 35px rgba(155, 81, 224, 0.5);
+    color: #fff;
+}
+
+/* Audio Player Component Override */
+audio {
+    width: 100%;
+    margin-top: 20px;
+    border-radius: 30px;
+    filter: invert(1) hue-rotate(180deg); /* Blends default browser audio skin into neon canvas */
+}
+
+/* ==========================================================================
+   8. FOOTER TERMINAL
+   ========================================================================== */
+footer {
+    border-top: 1px solid var(--border-glow);
+    padding: 50px 5vw;
+    background: #060913;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+footer p:first-child {
+    color: #e2e8f0;
+    font-weight: 500;
+}
+
+/* ==========================================================================
+   9. LIQUID RESPONSIVE BREAKPOINTS (Mobile Optimization)
+   ========================================================================== */
+@media (max-width: 900px) {
+    header { flex-direction: column; gap: 20px; text-align: center; }
+    #administration article div { flex-direction: column; text-align: center; }
+    footer { flex-direction: column; gap: 15px; text-align: center; }
+    #introduction h2 { font-size: 2.3rem; }
+}
