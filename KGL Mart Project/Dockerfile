@@ -1,7 +1,7 @@
 # syntax = docker/dockerfile:1
 
 # Adjust NODE_VERSION as desired
-ARG NODE_VERSION=24.14.0
+ARG NODE_VERSION=20.12.0
 FROM node:${NODE_VERSION}-slim AS base
 
 LABEL andasy_launch_runtime="Node.js"
@@ -39,6 +39,6 @@ RUN mkdir -p /data
 VOLUME /data
 
 # Start the server by default, this can be overwritten at runtime
-EXPOSE 3000
+EXPOSE 8080
 ENV DATABASE_URL="file:///data/sqlite.db"
-CMD [ "npm", "run", "start" ]
+CMD [ "node", "server.js" ]

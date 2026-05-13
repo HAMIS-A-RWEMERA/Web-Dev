@@ -2,7 +2,7 @@ app_name = "kglmart"
 
 app {
   primary_region = "kgl"
-  port = 3000
+  port = 8080
 
   process {
     name = "kglmart"
@@ -10,7 +10,7 @@ app {
 
   compute {
     cpu = 1
-    memory = 256
+    memory = 512
     cpu_kind = "shared"
   }
 }

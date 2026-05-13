@@ -125,3 +125,22 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
+function handleLocalSearch() {
+    const searchFilter = document.getElementById('search-input').value.toLowerCase().trim();
+    const productCards = document.querySelectorAll('.product-card');
+
+    productCards.forEach(card => {
+        const productNameElement = card.querySelector('h4');
+        
+        if (productNameElement) {
+            const productName = productNameElement.textContent.toLowerCase();
+
+            if (productName.includes(searchFilter)) {
+                card.style.display = ""; 
+            } else {
+                card.style.display = "none"; 
+            }
+        }
+    });
+}
+
