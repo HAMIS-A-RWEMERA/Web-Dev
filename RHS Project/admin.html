@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RHS Portal | Registrar Console</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <div>
+            <img src="assets/logo.png" alt="Logo" width="60" height="60">
+            <div>
+                <h1>RHS Registrar Console</h1>
+                <p>System Administration Node</p>
+            </div>
+        </div>
+        <nav aria-label="Admin Navigation">
+            <ul>
+                <li><a href="index.html">View Main Site</a></li>
+                <li><a href="admin.html" aria-current="page">Registrar Panel</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main id="main-content">
+        <section id="introduction">
+            <h2>Student Enrollment Terminal</h2>
+            <p>Input authorized academic data registries directly into the secure local SQLite core engine layers.</p>
+        </section>
+
+        <section id="portal">
+            <form id="admin-form">
+                <div>
+                    <label for="reg-id">New Student ID Assignment:</label>
+                    <input type="text" id="reg-id" placeholder="RHS-2026-XXXX" required pattern="RHS-[0-9]{4}-[0-9]{4}">
+                </div>
+                <div>
+                    <label for="reg-pin">Secure Access PIN (4 Digits):</label>
+                    <input type="password" id="reg-pin" placeholder="1234" required pattern="[0-9]{4}" maxlength="4">
+                </div>
+                <div>
+                    <label for="reg-name">Full Legal Name:</label>
+                    <input type="text" id="reg-name" placeholder="e.g., Keza Alice" required>
+                </div>
+                <div>
+                    <label for="reg-class">Academic Class / Combination:</label>
+                    <input type="text" id="reg-class" placeholder="e.g., Senior 5 PCM" required>
+                </div>
+                <div>
+                    <label for="reg-division">Performance Standing:</label>
+                    <input type="text" id="reg-division" placeholder="e.g., Division I" required>
+                </div>
+                <div>
+                    <label for="reg-score">Aggregate Testing Score (0-100):</label>
+                    <input type="number" id="reg-score" min="0" max="100" required>
+                </div>
+                <div>
+                    <label for="reg-conduct">Disciplinary Standing / Conduct:</label>
+                    <input type="text" id="reg-conduct" placeholder="e.g., Excellent" required>
+                </div>
+                <div>
+                    <label for="reg-balance">Outstanding Financial Balance (RWF):</label>
+                    <input type="number" id="reg-balance" min="0" placeholder="0" required>
+                </div>
+                <button type="submit">Commit Registry to SQL Database</button>
+            </form>
+        </section> 
+                <section id="portal" style="margin-top: 50px; border-color: rgba(239, 68, 68, 0.2);">
+            <h2 style="color: #ef4444;"><span style="text-shadow: 0 0 10px rgba(239,68,68,0.4);">// System Purge Terminal</span></h2>
+            <form id="purge-form" style="background: linear-gradient(145deg, rgba(30, 15, 20, 0.9), rgba(10, 15, 29, 0.9)); border-color: rgba(239, 68, 68, 0.25);">
+                <div>
+                    <label for="purge-id" style="color: #ef4444;">Target Student ID for Absolute Deletion:</label>
+                    <input type="text" id="purge-id" placeholder="RHS-2026-XXXX" required pattern="RHS-[0-9]{4}-[0-9]{4}">
+                </div>
+                <button type="submit" style="background: linear-gradient(90deg, #ef4444, #b91c1c); box-shadow: 0 0 25px rgba(239, 68, 68, 0.3); color: #fff;">Purge Student Profile From Disk</button>
+            </form>
+        </section>
+
+        <script>
+            // Intercept Purge Request Lifecycle
+            document.getElementById('purge-form').addEventListener('submit', (e) => {
+                e.preventDefault();
+                const studentId = document.getElementById('purge-id').value.trim();
+                
+                // Dynamic Fallback Safety Verification
+                const confirmation = confirm(`⚠️ EXTREME WARNING:\nYou are about to permanently erase student record "${studentId}" from the physical SQLite storage core.\n\nThis transaction cannot be undone. Proceed?`);
+                
+                if (!confirmation) return;
+
+                const submitBtn = e.target.querySelector('button');
+                submitBtn.disabled = true;
+                submitBtn.textContent = "Executing Hard SQL Purge...";
+
+                fetch('/api/admin-purge.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: new URLSearchParams({ id: studentId }).toString()
+                })
+                .then(res => res.json())
+                .then(data => {
+                    alert(data.message);
+                    if(data.success) document.getElementById('purge-form').reset();
+                })
+                .catch(() => alert("❌ Critical pipeline connection fault."))
+                .finally(() => {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = "Purge Student Profile From Disk";
+                });
+            });
+        </script>
+
+    </main>
+
+    <script>
+        // Low-level processing interception for administration insertion
+        document.getElementById('admin-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const submitBtn = e.target.querySelector('button');
+            submitBtn.disabled = true;
+            submitBtn.textContent = "Writing SQL Record Streams...";
+
+            // Package data into URL-encoded parameters manually
+            const payload = new URLSearchParams({
+                id: document.getElementById('reg-id').value.trim(),
+                pin: document.getElementById('reg-pin').value,
+                name: document.getElementById('reg-name').value.trim(),
+                class_name: document.getElementById('reg-class').value.trim(),
+                division: document.getElementById('reg-division').value.trim(),
+                score: document.getElementById('reg-score').value,
+                conduct: document.getElementById('reg-conduct').value.trim(),
+                balance: document.getElementById('reg-balance').value
+            });
+
+            fetch('/api/admin-enroll.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: payload.toString()
+            })
+            .then(res => res.json())
+            .then(data => {
+                alert(data.message);
+                if(data.success) document.getElementById('admin-form').reset();
+            })
+            .catch(() => alert("❌ Critical processing connection error encountered."))
+            .finally(() => {
+                submitBtn.disabled = false;
+                submitBtn.textContent = "Commit Registry to SQL Database";
+            });
+        });
+    </script>
+</body>
+</html>
