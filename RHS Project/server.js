@@ -194,7 +194,8 @@ const server = http.createServer((req, res) => {
     }
 });
 
-// Force network interface listen binding to IPv4 explicitly
-server.listen(PORT, '127.0.0.1', () => {
-    console.log(`🚀 Core Server Active: Point Chrome to http://127.0.0.1:${PORT}`);
+// Go to the very bottom of server.js and replace the server.listen line with this:
+// We drop '127.0.0.1' so the container accepts external public traffic routes
+server.listen(PORT, '0.0.0.0', () => {
+    console.log(`🚀 Production Server Operational on Web Port Room: ${PORT}`);
 });
