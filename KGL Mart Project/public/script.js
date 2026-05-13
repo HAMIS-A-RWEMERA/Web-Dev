@@ -18,19 +18,24 @@ function updateUI() {
 
     list.innerHTML = "";
     let total = 0;
+    let totalItemsCount = 0;
 
     cart.forEach((item, index) => {
-        total += item.price;
+        // Calculate the total cost for this item line (Price x Quantity)
+        const lineTotal = item.price * item.quantity;
+        total += lineTotal;
+        totalItemsCount += item.quantity;
+
         list.innerHTML += `
-            <div class="cart-item" onclick="removeItem(${index})" style="display:flex; justify-content:space-between; padding:10px; border-bottom:1px solid #eee; cursor:pointer;">
-                <span>${item.name}</span>
-                <span>${item.price.toLocaleString()} RWF ❌</span>
+            <div class="cart-item" onclick="removeItem(${index})" style="display:flex; justify-content:space-between; align-items:center; padding:10px; border-bottom:1px solid #eee; cursor:pointer;">
+                <span><strong>${item.name}</strong> <span style="color:#2e7d32; font-weight:bold;">(x${item.quantity})</span></span>
+                <span>${lineTotal.toLocaleString()} RWF ❌</span>
             </div>
         `;
     });
 
     totalEl.innerText = total.toLocaleString();
-    countEl.innerText = cart.length;
+    countEl.innerText = totalItemsCount; // Updates floating bubble with total item count
 }
 
 function addToCart(name, priceString, button) {
@@ -41,7 +46,14 @@ function addToCart(name, priceString, button) {
         return;
     }
 
-    cart.push({ name, price: numericPrice });
+    // Check if item already exists in the cart array
+    const existingItem = cart.find(item => item.name === name);
+
+    if (existingItem) {
+        existingItem.quantity += 1; // Increase quantity instead of adding a new line
+    } else {
+        cart.push({ name, price: numericPrice, quantity: 1 }); // Save item tracking an explicit quantity
+    }
     
     // Visual feedback
     const originalText = button.innerText;
@@ -56,18 +68,21 @@ function addToCart(name, priceString, button) {
 }
 
 function removeItem(index) {
-    cart.splice(index, 1);
+    if (cart[index].quantity > 1) {
+        cart[index].quantity -= 1; // Decrease quantity counter by 1
+    } else {
+        cart.splice(index, 1); // Delete completely if it drops to 0
+    }
     updateUI();
 }
 
 async function checkoutToWhatsApp() {
     if (cart.length === 0) return alert("Your cart is empty!");
 
-    // 1. Get the total amount (removing the 'RWF' and commas to make it a number)
     const totalStr = document.getElementById('cart-total').innerText;
     const totalNum = parseInt(totalStr.replace(/[^0-9]/g, ''));
 
-    // 2. SAVE TO DATABASE (The new part)
+    // 2. SAVE TO DATABASE 
     try {
         const response = await fetch('/api/place-order', {
             method: 'POST',
@@ -83,23 +98,20 @@ async function checkoutToWhatsApp() {
         console.error("Database save failed, but proceeding to WhatsApp...", error);
     }
 
-    // 3. SEND TO WHATSAPP (Your existing logic)
+    // 3. SEND TO WHATSAPP (Formatted list with quantity multipliers)
     let message = "Hello KGL Mart! I'd like to order:%0A%0A";
     cart.forEach((item, i) => {
-        message += `${i + 1}. ${item.name} - ${item.price.toLocaleString()} RWF%0A`;
+        const lineTotal = item.price * item.quantity;
+        message += `${i + 1}. ${item.name} (x${item.quantity}) - ${lineTotal.toLocaleString()} RWF%0A`;
     });
     
     message += `%0A*Total: ${totalStr} RWF*`;
 
-    // Note: Replaced the fixed link format here for you
     const whatsappUrl = `https://wa.me/250781549993?text=${message}`;
-
     window.open(whatsappUrl, '_blank');
 }
 
-
 document.addEventListener('DOMContentLoaded', () => {
-    // Select all buttons inside product cards
     const allButtons = document.querySelectorAll('.product-card button');
     
     allButtons.forEach(button => {
@@ -143,4 +155,3 @@ function handleLocalSearch() {
         }
     });
 }
-
