@@ -399,3 +399,37 @@ footer p:first-child {
     footer { flex-direction: column; gap: 15px; text-align: center; }
     #introduction h2 { font-size: 2.3rem; }
 }
+
+/* Custom mobile menu drawer rules triggered via vanilla JS state manipulation */
+@media (max-width: 900px) {
+    nav button {
+        display: block !important;
+        background: transparent;
+        border: 1px solid var(--accent-cyan);
+        color: var(--text-primary);
+        padding: 8px 16px;
+        border-radius: 8px;
+        font-family: var(--font-main);
+        font-weight: 700;
+        cursor: pointer;
+        transition: var(--transition-smooth);
+    }
+    
+    nav button:hover {
+        background: rgba(0, 242, 254, 0.1);
+        box-shadow: 0 0 15px var(--border-glow);
+    }
+
+    nav ul {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        background: var(--bg-dark);
+        padding: 20px 0;
+        border-top: 1px solid var(--border-glow);
+    }
+
+    nav ul.mobile-active {
+        display: flex !important;
+    }
+}
